@@ -1,140 +1,284 @@
 <template>
-  <Page >
-    <ActionBar title="Real State" actionBarHidden="true">
-      <NavigationButton
-        text="Atras"
-        android.systemIcon="ic_menu_back"
-        @tap="$navigateBack()"
-      />
-    </ActionBar>
-    <StackLayout>
-      <Image
-        src="https://cdn.pixabay.com/photo/2021/12/03/20/59/town-6843799_960_720.jpg"
-        class="fas"
-      />
-      <Label class="drawer-header" text="Hola bienvenido!" />
-      <StackLayout class="form-group">
-        <Label class="form-group-label" text="Correo:" />
-        <TextField v-model="form.email" hint="example@mail.com">
-          <Switch v-model="show" />
-        </TextField>
-        <Label class="form-group-label" text="Contraseña:" secure />
-        <TextField v-model="form.password" hint="******" secure="true" />
-        <Button text="Iniciar sesión" @tap="onButtonTap" />
+  <Page actionBarHidden="true">
+    <FlexboxLayout class="page">
+      <StackLayout class="form">
+        <Image class="logo" src="~/assets/images/logo.png"></Image>
+        <Label class="header" text="Real State"></Label>
+
+        <GridLayout rows="auto, auto, auto">
+          <StackLayout row="0" class="input-field">
+            <TextField
+              class="input"
+              hint="Email"
+              :isEnabled="!processing"
+              keyboardType="email"
+              autocorrect="false"
+              autocapitalizationType="none"
+              v-model="user.email"
+              returnKeyType="next"
+              @returnPress="focusPassword"
+            ></TextField>
+            <StackLayout class="hr-light"></StackLayout>
+          </StackLayout>
+
+          <StackLayout row="1" class="input-field">
+            <TextField
+              class="input"
+              ref="password"
+              :isEnabled="!processing"
+              hint="Password"
+              secure="true"
+              v-model="user.password"
+              :returnKeyType="isLoggingIn ? 'done' : 'next'"
+              @returnPress="focusConfirmPassword"
+            ></TextField>
+            <StackLayout class="hr-light"></StackLayout>
+          </StackLayout>
+
+          <StackLayout row="2" v-show="!isLoggingIn" class="input-field">
+            <TextField
+              class="input"
+              ref="confirmPassword"
+              :isEnabled="!processing"
+              hint="Confirm password"
+              secure="true"
+              v-model="user.confirmPassword"
+              returnKeyType="done"
+            ></TextField>
+            <StackLayout class="hr-light"></StackLayout>
+          </StackLayout>
+
+          <ActivityIndicator rowSpan="3" :busy="processing"></ActivityIndicator>
+        </GridLayout>
+
+        <Button
+          :text="isLoggingIn ? 'Iniciar sesión' : 'Registrarse'"
+          :isEnabled="!processing"
+          @tap="submit"
+          class="btn btn-primary m-t-20"
+        ></Button>
+        <Label
+          *v-show="isLoggingIn"
+          text="¿Contraseña olvidada?"
+          class="login-label"
+          @tap="forgotPassword()"
+        ></Label>
       </StackLayout>
-    </StackLayout>
+
+      <Label class="login-label sign-up-label" @tap="toggleForm()">
+        <FormattedString>
+          <Span
+            :text="isLoggingIn ? '¿No tienes cuenta? ' : 'Iniciar sesión '"
+          ></Span>
+          <Span :text="isLoggingIn ? 'Registrate' : ''" class="bold"></Span>
+        </FormattedString>
+      </Label>
+    </FlexboxLayout>
   </Page>
 </template>
 <script>
 import { mapState } from "vuex";
-import Home from "./App";
 export default {
   data() {
     return {
-      listOfItems: [
-        { text: "Item 1" },
-        { text: "Item 2" },
-        { text: "Item 3" },
-        { text: "Item 4" },
-        { text: "Item 5" },
-        { text: "Item 6" },
-        { text: "Item 7" },
-        { text: "Item 8" },
-        { text: "Item 9" },
-        { text: "Item 10" },
-        { text: "Item 11" },
-        { text: "Item 12" },
-        { text: "Item 13" },
-        { text: "Item 14" },
-        { text: "Item 15" },
-        { text: "Item 16" },
-        { text: "Item 17" },
-        { text: "Item 18" },
-        { text: "Item 19" },
-        { text: "Item 20" },
-        { text: "Item 21" },
-        { text: "Item 22" },
-        { text: "Item 23" },
-        { text: "Item 24" },
-        { text: "Item 25" },
-        { text: "Item 26" },
-        { text: "Item 27" },
-        { text: "Item 28" },
-        { text: "Item 29" },
-        { text: "Item 30" },
-        { text: "Item 31" },
-        { text: "Item 32" },
-        { text: "Item 33" },
-        { text: "Item 34" },
-        { text: "Item 35" },
-        { text: "Item 36" },
-        { text: "Item 37" },
-        { text: "Item 38" },
-        { text: "Item 39" },
-        { text: "Item 40" },
-        { text: "Item 41" },
-        { text: "Item 42" },
-        { text: "Item 43" },
-        { text: "Item 44" },
-        { text: "Item 45" },
-        { text: "Item 46" },
-        { text: "Item 47" },
-        { text: "Item 48" },
-        { text: "Item 49" },
-        { text: "Item 50" },
-      ],
-      form: {
+      isLoggingIn: true,
+      processing: false,
+      user: {
         email: "admin@admin.com ",
         password: "12345678",
-        remember: false,
+        confirmPassword: "12345678",
       },
       show: false,
     };
   },
   computed: {
-    ...mapState(["user"]),
   },
   methods: {
-    onButtonTop() {
-      axios
-        .get()
+    onButtonTop() {},
+    async onButtonTap() {
+      // const res = await this.$store.dispatch("user/login", this.form);
+      // console.log(res.data.user.plainTextToken);
+      await this.$store.dispatch("auth/login", this.user).then((response) => {
+        console.log("user desde login", this.$store.state.auth.user, response);
+      });
+      await this.$store.dispatch("auth/fetchUser").then((response) => {
+        console.log(
+          "user desde fetchUser",
+          this.$store.state.auth.user,
+          response
+        );
+        this.$routeTo("/home", {
+          transition: {
+            name: "fade",
+            duration: 380,
+          },
+        });
+      });
+      this.$root.$emit("fetchUser");
+    },
+    toggleForm() {
+      this.isLoggingIn = !this.isLoggingIn;
+    },
+    submit() {
+      if (!this.user.email || !this.user.password) {
+        this.alert("Please provide both an email address and password.");
+        return;
+      }
+
+      this.processing = true;
+      if (this.isLoggingIn) {
+        this.login();
+      } else {
+        this.register();
+      }
+    },
+
+    async login() {
+      await this.$store
+        .dispatch("auth/login", this.user)
         .then((response) => {
-          console.log(response);
+          this.processing = false;
+          // this.$$routeTo('/home', { clearHistory: true });
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          this.processing = false;
+          this.alert("Unfortunately we could not find your account.");
+        });
+      await this.$store.dispatch("auth/fetchUser").then((response) => {
+        console.log(
+          "user desde fetchUser",
+          this.$store.state.auth.user,
+          response
+        );
+        this.$routeTo("/home", {
+          transition: {
+            name: "fade",
+            duration: 380,
+          },
+        });
+      });
+      this.$root.$emit("fetchUser");
+    },
+    async register() {
+      if (this.user.password != this.user.confirmPassword) {
+        this.alert("Your passwords do not match.");
+        this.processing = false;
+        return;
+      }
+
+      this.$store
+        .dispatch("auth/register", this.user)
+        .then(() => {
+          this.processing = false;
+          this.alert("Your account was successfully created.");
+          this.isLoggingIn = true;
+        })
+        .catch(() => {
+          this.processing = false;
+          this.alert("Unfortunately we were unable to create your account.");
         });
     },
-    async onButtonTap() {
-      const res = await this.$store.dispatch("user/login", this.form);
-      // console.log(res.data.user.plainTextToken);
+    forgotPassword() {
+      prompt({
+        title: "Forgot Password",
+        message:
+          "Enter the email address you used to register for APP NAME to reset your password.",
+        inputType: "email",
+        defaultText: "",
+        okButtonText: "Ok",
+        cancelButtonText: "Cancel",
+      }).then((data) => {
+        if (data.result) {
+          this.$store
+            .dispatch("auth/refresh", data.text.trim())
+            .then(() => {
+              this.alert(
+                "Your password was successfully reset. Please check your email for instructions on choosing a new password."
+              );
+            })
+            .catch(() => {
+              this.alert(
+                "Unfortunately, an error occurred resetting your password."
+              );
+            });
+        }
+      });
+    },
+    focusPassword() {
+      this.$refs.password.nativeView.focus();
+    },
+    focusConfirmPassword() {
+      if (!this.isLoggingIn) {
+        this.$refs.confirmPassword.nativeView.focus();
+      }
+    },
+
+    alert(message) {
+      return alert({
+        title: "APP NAME",
+        okButtonText: "OK",
+        message: message,
+      });
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.drawer-header {
-  padding: 15 16 16 16;
-  font-family: "Be Vietnam Pro", sans-serif;
-  font-size: 20em;
-  text-align: center;
-}
-.fas {
-  width: 150;
-  height: 150;
-  border-radius: 100%;
+<style scoped>
+.page {
+  align-items: center;
+  flex-direction: column;
 }
 
-.form-group {
-  padding: 15 20 20 20;
-  margin-bottom: 16;
+.form {
+  margin-left: 30;
+  margin-right: 30;
+  flex-grow: 2;
+  vertical-align: middle;
+}
+
+.logo {
+  margin-bottom: 12;
+  height: 140;
+}
+
+.header {
+  horizontal-align: center;
+  font-size: 20;
+  font-weight: 400;
+  margin-bottom: 70;
+  text-align: center;
+}
+
+.input-field {
+  margin-bottom: 25;
+}
+
+.input {
+  font-size: 18;
+  placeholder-color: #a8a8a8;
+}
+
+.input:disabled {
+  background-color: white;
+  opacity: 0.5;
+}
+
+.btn-primary {
+  margin: 30 5 15 5;
+}
+
+.login-label {
+  horizontal-align: center;
+  color: #a8a8a8;
   font-size: 16;
-  &-label {
-    font-size: 16;
-    font-weight: bold;
-    color: #333333;
-    margin-left: 40px;
-  }
+}
+
+.sign-up-label {
+  margin-bottom: 20;
+}
+
+.bold {
+  color: #000000;
 }
 </style>

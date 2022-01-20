@@ -1,0 +1,81 @@
+.bottom-tabs,
+.header {
+  padding: 30 15;
+}
+
+.see-all {
+  padding: 0 18;
+}
+
+.tabs {
+  font-size: 13pt;
+  font-weight: bold;
+  padding: 0 9;
+}
+
+.tabs Label {
+  border-bottom-color: #686871;
+  border-bottom-width: 1;
+  color: #979797;
+  padding-bottom: 12;
+  text-align: center;
+}
+
+.tabs Label.active {
+  border-bottom-color: #ed2567;
+  border-bottom-width: 1;
+  color: #ed2567;
+}
+
+.content {
+  padding: 32 0 0 0;
+}
+
+.content .h1,
+.content .h2 {
+  padding-left: 18;
+}
+
+.room-list-header {
+  margin-top: 24;
+}
+
+.see-all {
+  color: #979797;
+  font-size: 10pt;
+  font-weight: 600;
+  text-align: right;
+}
+
+.rooms {
+  margin-top: 18;
+}
+
+.room {
+  padding-right: 12;
+}
+
+.room.first-child {
+  margin-left: 18;
+}
+
+.room .h2 {
+  padding-left: 0;
+}
+
+.room Image {
+  border-radius: 12;
+}
+
+.room Label.h2 {
+  color: #ce9f70;
+  margin-top: 8.29;
+}
+
+.stars {
+  margin-top: 8;
+}
+
+.stars Image {
+  padding-right: 1.71;
+}

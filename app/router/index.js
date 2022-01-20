@@ -3,7 +3,11 @@ import { createRouter } from "nativescript-vue-router-extended";
 import Home from '../components/Home';
 import Browser from '../components/Browse';
 import Profile from '../components/Profile';
-
+import Login from '../components/Login';
+import Search from '../components/Search';
+import Featured from '../components/Featured';
+import store from '../store';
+const one = 1;
 const routes = [
   {
     path: "/home",
@@ -11,58 +15,73 @@ const routes = [
 
     // Optional
     meta: {
-      isVertical: true,
-      // Example actions to dispatch automatically when page is visited
-      // Remember that you need to implement actions in your Vuex store
-      // store: {
-
-      //   // Call action to hide navigation buttons
-      //   showNavigationButtons: false,
-
-      //   // Call "showMovies" action in "categories" module with payload "all"
-      //   "categories/showMovies": "all",
-
-      //   // Call action without payload
-      //   showNavigationButtons: null,
-      // },
-    },
+      auth: false
+    }
 
 
     // Optional, per route guards are supported
     // More info: https://next.router.vuejs.org/guide/advanced/navigation-guards.html#per-route-guard
-    // beforeEnter: (to, from) => {
-    //   if (to.props.passUser) {
-    //     // Continue navigation
-    //     return true;
-    //   }
 
-    //   //   // Reject the navigation
-    //   //   return false;
-    // },
   },
   {
-    path: "/browser",
+    path: "/browse",
     component: Browser,
+    meta: {
+      auth: false,
+    }
+  },
+  {
+    path: "/search",
+    component: Search,
+    meta: {
+      auth: false,
+    }
+  },
+  {
+    path: "/featured",
+    component: Featured,
+    meta: {
+      auth: false,
+    }
+  },
+  {
+    path: "/login",
+    component: Login,
+    name: 'login',
+    meta: {
+      auth: false
+    }
   },
   {
     path: "/profile",
     component: Profile,
-    beforeEnter: (to, from, next) => {
-      if (!store.getters['auth/check']) {
-        next({ name: 'login' })
-      } else {
-        next()
-      }
-    }
+    meta: {
+      auth: true
+    },
+    beforeEnter: (to, from) => {
+
+        if (store.state.auth.isLoggedIn === true) {
+          console.log(store.state.auth.isLoggedIn);
+          console.log(store.state.auth.token);
+          return true;
+        }
+
+        //   // Reject the navigation
+          else return '/login';
+      },
+      // const canAccess = this.$store.state.auth.isLoggedIn;
+
+
+    // },
   },
 ];
 const router = createRouter(
-  { routes },
+  { routes, store },
   {
     // Optional settings below
 
     // Set first page to redirect to when there's no page to redirect back to
-    routeBackFallbackPath: "/home",
+    routeBackFallbackPath: "/login",
 
 
 
@@ -73,11 +92,8 @@ const router = createRouter(
 
   }
 );
-// router.beforeEach(async (to, from) => {
-//   // canUserAccess() returns `true` or `false`
-//   const canAccess = await canUserAccess(to)
-//   if (!canAccess) return '/login'
-// })
+
 export default router;
+
 
 

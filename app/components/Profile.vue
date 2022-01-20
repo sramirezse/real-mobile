@@ -3,7 +3,7 @@
       <ActionBar class="action-bar">
         <NavigationButton visibility="hidden"/>
         <GridLayout columns="50, *">
-          <Label class="action-bar-title" text="Settings" colSpan="2"/>
+          <Label class="action-bar-title" text="Perfil" colSpan="2"/>
 
           <Label class="fas" text.decode="&#xf0c9;" @tap="onDrawerButtonTap"/>
         </GridLayout>
@@ -22,7 +22,7 @@
 
   export default {
     mounted() {
-      SelectedPageService.getInstance().updateSelectedPage("Settings");
+      SelectedPageService.getInstance().updateSelectedPage("Profile");
     },
     computed: {
       message() {

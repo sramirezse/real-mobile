@@ -1,6 +1,9 @@
 @import '@nativescript/theme/core';
 @import '@nativescript/theme/default';
-
+@font-face {
+  font-family: 'Lato';
+  src: url('~/assets/fonts/Lato-Regular.ttf');
+}
 // Place any CSS rules you want to apply on both iOS and Android here.
 // This is where the vast majority of your CSS code goes.
 
@@ -19,6 +22,14 @@
   font-family: 'Font Awesome 5 Free', 'fa-regular-400';
   font-weight: 400;
 }
+.h1{
+  font-family: 'Lato';
+  font-size: 24px;
+}
+.h2{
+  font-family: 'Lato';
+  font-size: 20px;
+}
 
 // Common page class
 .page__content {
@@ -35,6 +46,10 @@
     vertical-align: top;
     margin-top: 20%;
   }
+}
+
+.h2{
+  font-family: 'Lato', sans-serif;
 }
 
 // Drawer navigation custom styles

@@ -1,6 +1,13 @@
 <template lang="html">
     <GridLayout rows="auto, *" class="nt-drawer__content">
-        <StackLayout row="0" class="nt-drawer__header">
+        <StackLayout v-if="user" row="0" class="nt-drawer__header" >
+            <Image class="nt-drawer__header-image fas t-36" src="https://cdn.pixabay.com/photo/2020/02/06/20/01/university-library-4825366_960_720.jpg" />
+            <!-- <Image class="nt-drawer__header-image fas t-36" src.decode="font://&#xf2bd;"/> -->
+
+            <Label class="nt-drawer__header-brand" :text="user.email"/>
+            <Label class="nt-drawer__header-footnote" :text="user.name"/>
+        </StackLayout>
+        <StackLayout v-else  row="0" class="nt-drawer__header">
             <Image class="nt-drawer__header-image fas t-36" src.decode="font://&#xf2bd;"/>
             <Label class="nt-drawer__header-brand" text="Nombre de usuario"/>
             <Label class="nt-drawer__header-footnote" text="username@mail.com"/>
@@ -10,106 +17,145 @@
             <StackLayout>
                 <GridLayout columns="auto, *"
                             :class="'nt-drawer__list-item' + (selectedPage === 'Home' ? ' -selected': '')"
-                            @tap="onNavigationItemTap(Home)">
+                            @tap="onNavigationItemTap('/home')">
                     <Label col="0" text.decode="&#xf015;" class="nt-icon fas"/>
                     <Label col="1" text="Inicio" class="p-r-10"/>
                 </GridLayout>
 
                 <GridLayout columns="auto, *"
                             :class="'nt-drawer__list-item' + (selectedPage === 'Browse' ? ' -selected': '')"
-                            @tap="onNavigationItemTap(Browse)">
+                            @tap="onNavigationItemTap('/browse')">
                     <Label col="0" text.decode="&#xf1ea;" class="nt-icon far"/>
                     <Label col="1" text="Browse" class="p-r-10"/>
                 </GridLayout>
 
                 <GridLayout columns="auto, *"
                             :class="'nt-drawer__list-item' + (selectedPage === 'Search' ? ' -selected': '')"
-                            @tap="onNavigationItemTap(Search)">
+                            @tap="onNavigationItemTap('/search')">
                     <Label col="0" text.decode="&#xf002;" class="nt-icon fas"/>
                     <Label col="1" text="Buscar" class="p-r-10"/>
                 </GridLayout>
 
                 <GridLayout columns="auto, *"
                             :class="'nt-drawer__list-item' + (selectedPage === 'Featured' ? ' -selected': '')"
-                            @tap="onNavigationItemTap(Featured)">
+                            @tap="onNavigationItemTap('/featured')">
                     <Label col="0" text.decode="&#xf005;" class="nt-icon fas"/>
                     <Label col="1" text="Destacados" class="p-r-10"/>
                 </GridLayout>
 
                 <StackLayout class="hr"/>
 
-                <GridLayout columns="auto, *"
+                <GridLayout v-if="user" columns="auto, *"
                             :class="'nt-drawer__list-item' + (selectedPage === 'Profile' ? ' -selected': '')"
-                            @tap="onNavigationItemTap(Profile)">
+                            @tap="onNavigationItemTap('/profile')">
                     <Label col="0" text.decode="&#xf013;" class="nt-icon fas"/>
                     <Label col="1" text="Perfil" class="p-r-10"/>
                 </GridLayout>
-                <GridLayout columns="auto, *"
+                <GridLayout v-if=" user == null" columns="auto, *"
                             :class="'nt-drawer__list-item' + (selectedPage === 'Login' ? ' -selected': '')"
-                            @tap="onNavigationItemTap(Login)">
+                            @tap="onNavigationItemTap('/login')">
                     <Label col="0" text.decode="&#xf013;" class="nt-icon fas"/>
                     <Label col="1" text="Iniciar Sesión" class="p-r-10"/>
                 </GridLayout>
-                <GridLayout columns="auto, *"
-                            :class="'nt-drawer__list-item' + (selectedPage === 'Login' ? ' -selected': '')"
-                            @tap="onNavigationItemTap(Login)">
+                <GridLayout v-if=" user" columns="auto, *"
+                            :class="'nt-drawer__list-item' + (selectedPage === 'Profile' ? ' -selected': '')"
+                            @tap="logout()">
                     <Label col="0" text.decode="&#xf013;" class="nt-icon fas"/>
-                    <Label col="1" text="Iniciar Sesión" class="p-r-10"/>
+                    <Label col="1" text="Cerrar sesión" class="p-r-10"/>
                 </GridLayout>
+                <!-- <GridLayout columns="auto, *"
+                            :class="'nt-drawer__list-item' + (selectedPage === 'Profile' ? ' -selected': '')"
+                            @tap="fetchUser()">
+                    <Label col="0" text.decode="&#xf013;" class="nt-icon fas"/>
+                    <Label col="1" text="Cerrar sesión" class="p-r-10"/>
+                </GridLayout> -->
+
             </StackLayout>
         </ScrollView>
     </GridLayout>
 </template>
 
 <script>
-  import Home from "./Home";
-  import Browse from "./Browse";
-  import Login from "./Login";
-  import Featured from "./Featured";
-  import Search from "./Search";
-  import Profile from "./Profile";
-  import * as utils from "~/shared/utils";
-  import { SelectedPageService } from "~/shared/selected-page-service";
+import Home from "./Home";
+import Browse from "./Browse";
+import Login from "./Login";
+import Featured from "./Featured";
+import Search from "./Search";
+import Profile from "./Profile";
+import * as utils from "~/shared/utils";
+import { SelectedPageService } from "~/shared/selected-page-service";
+import { mapState } from "vuex";
 
-  export default {
-    mounted() {
-      SelectedPageService.getInstance().selectedPage$
-        .subscribe((selectedPage) => this.selectedPage = selectedPage);
+export default {
+  mounted() {
+    SelectedPageService.getInstance().selectedPage$.subscribe(
+      (selectedPage) => (this.selectedPage = selectedPage)
+    );
+    this.fetchUser();
+    this.$root.$on('fetchUser', data => {
+        console.log('se ejecuto el evento fetchUser');this.fetchUser();
+    });
+  },
+  data() {
+    return {
+      Home: Home,
+      Browse: Browse,
+      Featured: Featured,
+      Search: Search,
+      Profile: Profile,
+      Login: Login,
+      selectedPage: "",
+    user:null
+
+    };
+  },
+  components: {
+    Home,
+    Browse,
+    Featured,
+    Search,
+    Profile,
+    Login,
+  },
+  computed: {
+
+  },
+  methods: {
+
+    onNavigationItemTap(component) {
+      this.$routeTo(component, {
+        // clearHistory: true
+      });
+      console.log(this.user);
+      utils.closeDrawer();
     },
-    data() {
-      return {
-        Home: Home,
-        Browse: Browse,
-        Featured: Featured,
-        Search: Search,
-        Profile: Profile,
-        Login:Login,
-        selectedPage: ""
-      };
+    async logout() {
+      await this.$store.dispatch("auth/logout").then((res) => {
+        console.log(res);
+        this.user = null;
+        this.$routeTo("/login");
+      });
+
+
+      // console.log(this.user);
     },
-    components: {
-      Home,
-      Browse,
-      Featured,
-      Search,
-      Profile,
-      Login
+    async fetchUser() {
+      await this.$store.dispatch("auth/fetchUser").then((tes) => {
+        this.user  = this.$store.state.auth.user;
+      console.log(this.$refs);
+
+        console.log('fetchuserDrawer',this.$store.state.auth.user);
+      });
+
     },
-    methods: {
-      onNavigationItemTap(component) {
-        this.$navigateTo(component, {
-          clearHistory: true
-        });
-        utils.closeDrawer();
-      }
-    }
-  };
+  },
+};
 </script>
 
 <style scoped lang="scss">
-    // Start custom common variables
-    @import '@nativescript/theme/scss/variables/blue';
-    // End custom common variables
+// Start custom common variables
+@import "@nativescript/theme/scss/variables/blue";
+// End custom common variables
 
-    // Custom styles
+// Custom styles
 </style>

@@ -7,6 +7,7 @@ Vue.use(Vuex)
 Vue.use(RadSideDrawer)
 
 import App from './components/App';
+import { onErrorResumeNext } from 'rxjs';
 
 Vue.config.silent = !__DEV__
 

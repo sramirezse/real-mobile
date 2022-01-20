@@ -50,7 +50,7 @@ export default {
     async onButtonTap() {
       await this.$store.dispatch("auth/fetchUser");
 
-      console.log('user', this.$store.state.auth);
+      // console.log('user', this.$store.state.auth);
     },
     computed: {
       ...mapState({

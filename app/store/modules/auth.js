@@ -3,7 +3,7 @@ import * as ApplicationSettings from '@nativescript/core/application-settings';
 
 // state
 export const state = {
-  user: null,
+  user: ApplicationSettings.getString('user'),
   token: ApplicationSettings.getString('token'),
   isLoggedIn: ApplicationSettings.getString('token') ? true : false,
 
@@ -18,9 +18,11 @@ export const getters = {
 }
 // mutations
 export const mutations = {
-  SAVE_TOKEN (state, { token, remember }) {
+  SAVE_TOKEN (state, { token, remember, user }) {
     state.token = token;
     ApplicationSettings.setString('token', token);
+    ApplicationSettings.setString('user', user);
+    ApplicationSettings.setBoolean('isLoggedIn', true);
     state.isLoggedIn = true;
   },
 
@@ -30,13 +32,19 @@ export const mutations = {
 
   FETCH_USER_FAILURE (state) {
     state.token = null
-    ApplicationSettings.remove('isLoggedIn')
+    ApplicationSettings.remove('isLoggedIn');
+    state.isLoggedIn = false;
+
   },
 
   LOGOUT (state) {
     state.user = null
-    ApplicationSettings.remove('isLoggedIn')
-    state.isLoggedIn = false
+    ApplicationSettings.remove('isLoggedIn');
+    ApplicationSettings.remove('user');
+    ApplicationSettings.remove('token');
+    state.isLoggedIn = false;
+    state.token = null;
+    state.authToken = null;
   },
 
   UPDATE_USER (state, { user }) {
@@ -50,16 +58,15 @@ export const actions = {
   async login ({ commit, dispatch }, payload) {
     try {
       const { data } = await userApi.signin(payload)
-      console.log(data,'this fortm', payload)
-      commit('SAVE_TOKEN', { token: data.user.token.plainTextToken, remember: payload.remember_me });
-      commit('FETCH_USER_SUCCESS', { user: data.user });
+      // console.log(data,'this fortm', payload)
+      commit('SAVE_TOKEN', { token: data.user.token.plainTextToken, remember: payload.remember_me, user:data.user });
+      commit('FETCH_USER_SUCCESS', { user: data.user.user });
       return data;
 
     } catch (err) {
       console.log(err);
     }
     // commit('LOGOUT')
-    console.log('asdasd');
   },
 
   async refresh ({ commit }) {
@@ -73,12 +80,13 @@ export const actions = {
 
   async fetchUser ({ commit }) {
     try {
-      const { data } = await userApi.me()
+      const { data } = await userApi.me();
 
-      console.log('data', data);
-      commit('FETCH_USER_SUCCESS', { user: data })
+      commit('FETCH_USER_SUCCESS', { user: data.user });
+      return data;
     } catch (e) {
-      commit('FETCH_USER_FAILURE')
+      commit('FETCH_USER_FAILURE');
+      console.log(e);
     }
   },
 
@@ -88,8 +96,15 @@ export const actions = {
 
   async logout ({ commit }) {
     try {
-      await userApi.logout()
-    } catch (e) { }
+      await userApi.logout().then((res)=>{
+        console.log(res)
+      } )
+
+      commit('LOGOUT')
+      return true
+    } catch (e) {
+      console.log(e)
+     }
 
     commit('LOGOUT')
   }

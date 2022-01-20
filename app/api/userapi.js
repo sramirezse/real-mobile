@@ -8,9 +8,11 @@ export default {
         return await axio.get('https://realstate.kratoxxsoft.com/api/auth/user').catch((e)=>{console.error(e)})
     },
     async logout() {
-        return await axios.get(`auth/logout`)
+      console.log('logout');
+      return await axios.post(`auth/logout`)
     },
     async refresh () {
+
         return await axios.post(`auth/refresh`)
     },
 }

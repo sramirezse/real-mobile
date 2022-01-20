@@ -1,5 +1,5 @@
 <template>
-    <Page class="page">
+    <Page class="page" backgroundSpanUnderStatusBar="true">
       <ActionBar class="action-bar">
         <NavigationButton visibility="hidden"/>
         <GridLayout columns="50, *">
