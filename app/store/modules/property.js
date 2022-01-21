@@ -4,6 +4,7 @@ import * as ApplicationSettings from '@nativescript/core/application-settings';
 export const state = {
   property: {},
   properties: [],
+  total: 0,
   loading: true,
 }
 
@@ -19,7 +20,8 @@ export const mutations = {
     state.loading = false
   },
   FETCH_PROPERTIES(state, properties){
-    state.properties = properties
+    state.properties = properties.data
+    state.total = properties.total
     state.loading = false
   },
 
@@ -28,8 +30,9 @@ export const mutations = {
 export const actions = {
   async index({ commit }, payload) {
     try {
-      const {data} = await propertyapi.index(payload);
+      const {data} = await propertyapi.index(payload)
       commit('FETCH_PROPERTIES', data);
+      return data;
     } catch (e) {
       console.log(e.data);
     }

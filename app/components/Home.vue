@@ -91,13 +91,16 @@
                 height="205"
                 orientation="horizontal"
                 loaded="disableScrollBar"
+                @scroll="horizontalPercentFunc($event)"
+
               >
-                <StackLayout orientation="horizontal">
+                <StackLayout orientation="horizontal" >
                   <StackLayout
                     class="first-child room"
                     width="138"
-                    @tap="showDetails()"
+                    @tap="showDetails(item)"
                     pageTransition="fade"
+                    v-for="item in items" :key="item"
                   >
 
                     <Image height="120" src="~/assets/images/room1.jpg" />
@@ -116,33 +119,6 @@
                     </StackLayout>
                     <Label style="padding-left: 10px" class="h2" height="31" text="$ 300"></Label>
                     <Label style="padding-left: 10px" height="31" text="Nombre de la propiedad"></Label>
-                  </StackLayout>
-
-
-
-                  <StackLayout
-                    class="first-child room"
-                    width="138"
-                    @tap="showDetails()"
-                    pageTransition="fade"
-                  >
-
-                    <Image height="120" src="~/assets/images/room1.jpg" />
-                    <StackLayout
-                      height="14"
-                      class="stars"
-                      orientation="horizontal"
-                      style="padding-left: 15px;"
-                    >
-
-                     <Image  src.decode="font://&#11088;" />
-                     <Image  src.decode="font://&#11088;" />
-                     <Image  src.decode="font://&#11088;" />
-                     <Image  src.decode="font://&#11088;" />
-                     <Image  src.decode="font://&#11088;" />
-                    </StackLayout>
-                    <Label class="h2" height="31" text="$ 300"></Label>
-                    <Label height="31" text="Nombre de la propiedad"></Label>
                   </StackLayout>
 
                 </StackLayout>
@@ -272,9 +248,11 @@ import Details from "./Details";
 import * as utils from "~/shared/utils";
 import { SelectedPageService } from "../shared/selected-page-service";
 import { mapState } from "vuex";
-
+import NumberFormat from "../mixins/numberFormat";
+import eventScroll from "../mixins/eventScroll";
 export default {
   computed: {},
+  mixins: [NumberFormat, eventScroll],
   mounted() {
     SelectedPageService.getInstance().updateSelectedPage("Home");
     // console.log('user', this.$store.state.auth.user);
@@ -287,6 +265,7 @@ export default {
         password: "12345678",
         remember_me: true,
       },
+      items: [],
     };
   },
   props:{
@@ -294,16 +273,25 @@ export default {
   },
   methods: {
     onButtonTap() {},
-    showDetails() {
+    showDetails(item) {
         console.log('show details', this.$store.state.auth.user);
       this.$navigateTo(Details, {
         animated: true,
         transition: {
-          name: "fade",
-          duration: 380,
+          name: "slide",
+          duration: 200,
           curve: "easeIn",
         },
+        props: {
+          item: item,
+        },
       });
+    },
+    horizontalPercentFunc(event){
+      const events = this.horizontalPercent(event);
+      if(events.percent > 80){
+        console.log('scroll asdasdasdasd', events);
+      }
     },
     async onDrawerButtonTap() {
       utils.showDrawer();
@@ -314,7 +302,7 @@ export default {
 
     },
     async fetchProperties(){
-      await this.$store.dispatch('property/index', {
+       const data = await this.$store.dispatch('property/index', {
         params: {
           page: 1,
           per_page: 10,
@@ -322,11 +310,11 @@ export default {
           offset:0,
           search: ''
         },
-      }).then(res => {
-        console.log(res);
-      }).catch(e => {
-        console.log(e);
       });
+      this.items = data.data;
+
+
+      console.log('desde componente',this.items);
     }
 
   },

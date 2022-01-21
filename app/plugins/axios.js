@@ -3,7 +3,7 @@ import store from '../store';
 // window.toastr = require('toastr')
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-axios.defaults.baseURL = 'https://realstate.kratoxxsoft.com/api';
+axios.defaults.baseURL = 'https://realstate.kratoxxsoft.com/api/';
 
 axios.interceptors.request.use(request => {
   if (store.getters['auth/token']) {
