@@ -11,6 +11,7 @@ export const state = {
 export const getters = {
   property: state => state.property,
   properties: state => state.properties,
+  totalLoad: state => state.properties.length,
   loading: state => state.loading,
 }
 
@@ -20,7 +21,12 @@ export const mutations = {
     state.loading = false
   },
   FETCH_PROPERTIES(state, properties){
-    state.properties = properties.data
+    // console.log('FETCH_PROPERTIES las qeue vienen', properties);
+    // console.log('FETCH_PROPERTIES lñasque estan', state.properties);
+    // state.properties = properties.data
+    const props = state.properties;
+    props.push(...properties.data);
+    // console.log('FETCH_PROPERTIES lñasque estan', state.properties);
     state.total = properties.total
     state.loading = false
   },

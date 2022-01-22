@@ -1,3 +1,4 @@
+import intl from "nativescript-intl";
 export default {
   data(){
     return{

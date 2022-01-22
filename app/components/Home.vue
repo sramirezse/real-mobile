@@ -88,7 +88,7 @@
               </GridLayout>
               <ScrollView
                 class="rooms"
-                height="205"
+                height="180"
                 orientation="horizontal"
                 loaded="disableScrollBar"
                 @scroll="horizontalPercentFunc($event)"
@@ -97,28 +97,28 @@
                 <StackLayout orientation="horizontal" >
                   <StackLayout
                     class="first-child room"
-                    width="138"
+                    width="135"
                     @tap="showDetails(item)"
                     pageTransition="fade"
-                    v-for="item in items" :key="item"
+                    v-for="item in items" :key="item.id"
                   >
 
-                    <Image height="120" src="~/assets/images/room1.jpg" />
+                    <Image style="border-radius: 10" height="100" :src="item.image ? item.image: 'https://cdn.pixabay.com/photo/2018/11/10/22/57/mountain-3807667_960_720.jpg'" />
                     <StackLayout
-                      height="14"
+                      height="11"
                       class="stars"
                       orientation="horizontal"
                       style="padding-left: 15px;"
                     >
 
-                     <Image  src.decode="font://&#11088;" />
-                     <Image  src.decode="font://&#11088;" />
-                     <Image  src.decode="font://&#11088;" />
-                     <Image  src.decode="font://&#11088;" />
-                     <Image  src.decode="font://&#11088;" />
+                     <Image height="11"  src.decode="font://&#11088;" />
+                     <Image height="11"  src.decode="font://&#11088;" />
+                     <Image height="11"  src.decode="font://&#11088;" />
+                     <Image height="11"  src.decode="font://&#11088;" />
+                     <Image height="11"  src.decode="font://&#11088;" />
                     </StackLayout>
-                    <Label style="padding-left: 10px" class="h2" height="31" text="$ 300"></Label>
-                    <Label style="padding-left: 10px" height="31" text="Nombre de la propiedad"></Label>
+                    <Label style="padding-left: 10px" class="h3" height="23" :text="'$'+ numberFormat(item.price)+'.00'"></Label>
+                    <Label style="padding-left: 10px" height="20" :text="item.address"></Label>
                   </StackLayout>
 
                 </StackLayout>
@@ -266,6 +266,9 @@ export default {
         remember_me: true,
       },
       items: [],
+      onStore:0,
+      page: 1,
+      perPage: 10,
     };
   },
   props:{
@@ -289,8 +292,15 @@ export default {
     },
     horizontalPercentFunc(event){
       const events = this.horizontalPercent(event);
-      if(events.percent > 80){
-        console.log('scroll asdasdasdasd', events);
+      if(events.percent ==100){
+        const count = this.items.length;
+        const total = this.$store.getters['property/totalLoad'];
+        if(count == total){
+          this.page ++;
+          console.log(this.page);
+          this.fetchProperties();
+          console.log('99percent');
+        }
       }
     },
     async onDrawerButtonTap() {
@@ -304,17 +314,19 @@ export default {
     async fetchProperties(){
        const data = await this.$store.dispatch('property/index', {
         params: {
-          page: 1,
-          per_page: 10,
-          limit: 20,
-          offset:0,
+          page: this.page,
+          per_page: this.perPage,
+          limit: this.perPage,
+          offset: this.page == 1 ? 0 : (this.page - 1) * this.perPage,
           search: ''
         },
       });
-      this.items = data.data;
+      this.items.push(...data.data);
 
 
-      console.log('desde componente',this.items);
+      console.log('desde componente', data);
+      // console.log('desde componente', this.items);
+      // console.log('desde componentereverse', this.items.reverse());
     }
 
   },
