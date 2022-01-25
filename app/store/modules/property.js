@@ -36,9 +36,9 @@ export const mutations = {
 export const actions = {
   async index({ commit }, payload) {
     try {
-      const {data} = await propertyapi.index(payload)
-      commit('FETCH_PROPERTIES', data);
-      return data;
+      const res = await propertyapi.index(payload)
+      commit('FETCH_PROPERTIES', res);
+      return res;
     } catch (e) {
       console.log(e.data);
     }

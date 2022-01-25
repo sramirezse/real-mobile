@@ -1,4 +1,4 @@
-import userApi from "../../api/userApi";
+import userApi from "../../api/userapi";
 import * as ApplicationSettings from '@nativescript/core/application-settings';
 
 // state
@@ -6,6 +6,7 @@ export const state = {
   user: ApplicationSettings.getString('user'),
   token: ApplicationSettings.getString('token'),
   isLoggedIn: ApplicationSettings.getString('token') ? true : false,
+  token_id: ApplicationSettings.getNumber('token_id'),
 
 }
 
@@ -21,6 +22,7 @@ export const mutations = {
   SAVE_TOKEN (state, { token, remember, user }) {
     state.token = token;
     ApplicationSettings.setString('token', token);
+    ApplicationSettings.setNumber('token_id', token_id);
     ApplicationSettings.setString('user', user);
     ApplicationSettings.setBoolean('isLoggedIn', true);
     state.isLoggedIn = true;
@@ -42,6 +44,7 @@ export const mutations = {
     ApplicationSettings.remove('isLoggedIn');
     ApplicationSettings.remove('user');
     ApplicationSettings.remove('token');
+    ApplicationSettings.remove('token_id');
     state.isLoggedIn = false;
     state.token = null;
     state.authToken = null;
@@ -57,14 +60,15 @@ export const actions = {
 
   async login ({ commit, dispatch }, payload) {
     try {
-      const { data } = await userApi.signin(payload)
-      // console.log(data,'this fortm', payload)
-      commit('SAVE_TOKEN', { token: data.user.token.plainTextToken, remember: payload.remember_me, user:data.user });
-      commit('FETCH_USER_SUCCESS', { user: data.user.user });
-      return data;
+      // const { data } = await userApi.signin(payload)
+      const res = await userApi.signin(payload);
+      // console.log('this fortm',res)
+      commit('SAVE_TOKEN', { token: res.user.token.plainTextToken, remember: payload.remember_me, user:res.user, token_id: res.user.token.id });
+      commit('FETCH_USER_SUCCESS', { user: res.user.user });
+      return res;
 
     } catch (err) {
-      console.log(err);
+      console.log('error', err);
     }
     // commit('LOGOUT')
   },
@@ -80,10 +84,10 @@ export const actions = {
 
   async fetchUser ({ commit }) {
     try {
-      const { data } = await userApi.me();
+      const res = await userApi.me();
 
-      commit('FETCH_USER_SUCCESS', { user: data.user });
-      return data;
+      commit('FETCH_USER_SUCCESS', { user: res.user });
+      return res;
     } catch (e) {
       commit('FETCH_USER_FAILURE');
       console.log(e);
@@ -96,12 +100,11 @@ export const actions = {
 
   async logout ({ commit }) {
     try {
-      await userApi.logout().then((res)=>{
-        console.log(res)
-      } )
+      const res = await userApi.logout();
+      console.log(res);
 
       commit('LOGOUT')
-      return true
+      return false
     } catch (e) {
       console.log(e)
      }

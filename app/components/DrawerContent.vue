@@ -93,7 +93,8 @@ export default {
     );
     this.fetchUser();
     this.$root.$on('fetchUser', data => {
-        console.log('se ejecuto el evento fetchUser');this.fetchUser();
+        // console.log('se ejecuto el evento fetchUser');
+        this.fetchUser();
     });
   },
   data() {
@@ -131,9 +132,9 @@ export default {
     },
     async logout() {
       await this.$store.dispatch("auth/logout").then((res) => {
-        console.log(res);
+        // console.log(res);
         this.user = null;
-        this.$routeTo("/login");
+        // this.$routeTo("/login");
       });
 
 
@@ -141,10 +142,11 @@ export default {
     },
     async fetchUser() {
       await this.$store.dispatch("auth/fetchUser").then((tes) => {
+        console.log(this.$store.state.auth.user)
         this.user  = this.$store.state.auth.user;
-      console.log(this.$refs);
+      // console.log(this.$refs);
 
-        console.log('fetchuserDrawer',this.$store.state.auth.user);
+        // console.log('fetchuserDrawer',this.$store.state.auth.user);
       });
 
     },

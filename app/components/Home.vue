@@ -123,119 +123,7 @@
 
                 </StackLayout>
               </ScrollView>
-              <GridLayout
-                class="room-list-header"
-                rows="auto"
-                columns="*,auto"
-                height="30"
-              >
-                <Label
-                  class="h2"
-                  text="En renta"
-                  row="0"
-                  col="0"
-                  colspan="6"
-                ></Label>
-                <Label
-                  class="see-all"
-                  text="See all"
-                  row="0"
-                  col="1"
-                  colspan="2"
-                ></Label>
-              </GridLayout>
-              <ScrollView class="rooms" height="185" orientation="horizontal">
-                <StackLayout orientation="horizontal">
-                  <StackLayout class="first-child room" width="138">
-                    <Image height="138" src="~/assets/images/room2.jpg" />
-                    <StackLayout
-                      height="9.71"
-                      class="stars"
-                      orientation="horizontal"
-                    >
-                    <Image src.decode="font://&#xf004;" class="fas" />
 
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-empty.png"
-                      />
-                    </StackLayout>
-                    <Label class="h2" height="21" text="$ 300"></Label>
-                  </StackLayout>
-                  <StackLayout class="room" width="138">
-                    <Image height="138" src="~/assets/images/room1.jpg" />
-                    <StackLayout
-                      height="9.71"
-                      class="stars"
-                      orientation="horizontal"
-                    >
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                    </StackLayout>
-                    <Label class="h2" height="21" text="$ 300"></Label>
-                  </StackLayout>
-                  <StackLayout class="room" width="138">
-                    <Image height="138" src="~/assets/images/room3.jpg" />
-                    <StackLayout
-                      height="9.71"
-                      class="stars"
-                      orientation="horizontal"
-                    >
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-filled.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-empty.png"
-                      />
-                      <Image
-                        width="10.28"
-                        src="~/assets/images/star-empty.png"
-                      />
-                    </StackLayout>
-                    <Label class="h2" height="21" text="$ 300"></Label>
-                  </StackLayout>
-                </StackLayout>
-              </ScrollView>
             </StackLayout>
           </StackLayout>
         </ScrollView>
@@ -250,12 +138,12 @@ import { SelectedPageService } from "../shared/selected-page-service";
 import { mapState } from "vuex";
 import NumberFormat from "../mixins/numberFormat";
 import eventScroll from "../mixins/eventScroll";
+import propertyMixin from "../mixins/property";
 export default {
   computed: {},
-  mixins: [NumberFormat, eventScroll],
+  mixins: [NumberFormat, eventScroll,propertyMixin],
   mounted() {
     SelectedPageService.getInstance().updateSelectedPage("Home");
-    // console.log('user', this.$store.state.auth.user);
     this.fetchProperties();
   },
   data() {
@@ -265,10 +153,6 @@ export default {
         password: "12345678",
         remember_me: true,
       },
-      items: [],
-      onStore:0,
-      page: 1,
-      perPage: 10,
     };
   },
   props:{
@@ -290,44 +174,14 @@ export default {
         },
       });
     },
-    horizontalPercentFunc(event){
-      const events = this.horizontalPercent(event);
-      if(events.percent ==100){
-        const count = this.items.length;
-        const total = this.$store.getters['property/totalLoad'];
-        if(count == total){
-          this.page ++;
-          console.log(this.page);
-          this.fetchProperties();
-          console.log('99percent');
-        }
-      }
-    },
     async onDrawerButtonTap() {
       utils.showDrawer();
-      // axios.post('https://realstate.kratoxxsoft.com/api/auth/login', this.form).then((res)=>{console.log(res)}).catch((e)=>{console.log(e)});
-      // console.log(this.$store.state.auth.user, 'desde home');
+
     },
     async onButtonTap() {
 
     },
-    async fetchProperties(){
-       const data = await this.$store.dispatch('property/index', {
-        params: {
-          page: this.page,
-          per_page: this.perPage,
-          limit: this.perPage,
-          offset: this.page == 1 ? 0 : (this.page - 1) * this.perPage,
-          search: ''
-        },
-      });
-      this.items.push(...data.data);
 
-
-      console.log('desde componente', data);
-      // console.log('desde componente', this.items);
-      // console.log('desde componentereverse', this.items.reverse());
-    }
 
   },
 };
