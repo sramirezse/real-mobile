@@ -1,14 +1,14 @@
 <template lang="html">
     <GridLayout rows="auto, *" class="nt-drawer__content">
         <StackLayout v-if="user" row="0" class="nt-drawer__header" >
-            <Image class="nt-drawer__header-image fas t-36" src="https://cdn.pixabay.com/photo/2020/02/06/20/01/university-library-4825366_960_720.jpg" />
+            <Image class="nt-drawer__header-image fas t-36"  :src="user.profile_photo_url"/>
             <!-- <Image class="nt-drawer__header-image fas t-36" src.decode="font://&#xf2bd;"/> -->
 
             <Label class="nt-drawer__header-brand" :text="user.email"/>
             <Label class="nt-drawer__header-footnote" :text="user.name"/>
         </StackLayout>
         <StackLayout v-else  row="0" class="nt-drawer__header">
-            <Image class="nt-drawer__header-image fas t-36" src.decode="font://&#xf2bd;"/>
+            <Image class="nt-drawer__header-image fas t-36" src="https://ui-avatars.com/api/?name=Usuario&color=7F9CF5&background=EBF4FF"/>
             <Label class="nt-drawer__header-brand" text="Nombre de usuario"/>
             <Label class="nt-drawer__header-footnote" text="username@mail.com"/>
         </StackLayout>

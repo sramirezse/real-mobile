@@ -36,13 +36,7 @@
                 height="30"
               />
             </GridLayout>
-            <GridLayout class="tabs" columns="*,*,*,*,*" height="30">
-              <Label class="active" text="Destacadas" row="0" col="0"></Label>
-              <Label text="En renta" row="0" col="1"></Label>
-              <Label text="En venta" row="0" col="2"></Label>
-              <Label text="Piscina" row="0" col="3"></Label>
-              <Label text="Terraza" row="0" col="4"></Label>
-            </GridLayout>
+
             <StackLayout class="content">
 
 
@@ -50,7 +44,7 @@
                 <StackLayout style="font-size: 18">
                   <StackLayout alignItems="center">
                     <Image
-                      src="~/assets/images/profilepic.png"
+                      :src="user.profile_photo_url"
                       stretch="aspectFill"
                       class="profilePic"
                     >
