@@ -4,29 +4,7 @@
 
     <GridLayout class="page__content">
       <DockLayout class="screen" stretchLastChild="true">
-        <GridLayout
-          class="bottom-tabs"
-          columns="*,*,*,*"
-          height="100"
-          orientation="horizontal"
-          dock="bottom"
-        >
-          <Image row="0" col="0" height="20" src="~/assets/images/home.png" />
-          <Image
-            row="0"
-            col="1"
-            height="20"
-            src="~/assets/images/explore.png"
 
-          />
-          <Image row="0" col="2" height="20" src="~/assets/images/saved.png" />
-          <Image
-            row="0"
-            col="3"
-            height="20"
-            src="~/assets/images/contacts.png"
-          />
-        </GridLayout>
         <ScrollView dock="top">
           <StackLayout orientation="vertical">
             <GridLayout class="header" rows="auto" columns="*,auto,auto">
@@ -34,6 +12,7 @@
 
                 <Label
                   class="fas"
+                  style="font-size: 20; font-weight: bold;"
                   text.decode="&#xf0c9;"
                   @tap="onDrawerButtonTap"
                 />
@@ -48,12 +27,12 @@
                 @tap="$routeTo('/search')"
               />
               <Image
-                src="~/assets/images/header-cart.png"
+                src="~/assets/images/houses.png"
                 verticalAlignment="middle"
                 marginRight="10"
                 row="0"
                 col="2"
-                height="14"
+                height="30"
               />
             </GridLayout>
             <GridLayout class="tabs" columns="*,*,*,*,*" height="30">
