@@ -3,7 +3,7 @@
 
         <GridLayout class="room-page screen" columns="*">
             <AbsoluteLayout class="background-image" row="0" col="0">
-                <Image src="~/assets/images/Group_48@3x.png"></Image>
+                <Image :src="item.image?item.image : ''"></Image>
             </AbsoluteLayout>
             <DockLayout stretchLastChild="true" row="0" col="0">
                 <DockLayout class="toolbar" dock="top" height="50"
@@ -22,12 +22,12 @@
                     <StackLayout class="room-page-content">
                         <GridLayout class="header" columns="*,*" rows="auto,auto"
                             height="78">
-                            <Label class="h1" text="Single" row="0" col="0"
+                            <Label class="h1" :text="item.address" row="0" col="0"
                                 colspan="6"></Label>
-                            <Label class="h2" text="Standard" row="1" col="0"
+                            <Label class="h2" :text="`${item.city}, ${item.state} `" row="1" col="0"
                                 colspan="6"></Label>
                         </GridLayout>
-                        <Label class="description" textWrap="true" text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis"></Label>
+                        <!-- <Label class="description" textWrap="true" text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis"></Label> -->
                         <ScrollView class="room-pics" height="185"
                             orientation="horizontal" loaded="disableScrollBar">
                             <StackLayout orientation="horizontal">
@@ -89,7 +89,8 @@
             toggleBookmark() {
                 this.bookmarked = !this.bookmarked;
             }
-        }
+        },
+        props: ['item']
     };
 </script>
 <style scoped>
@@ -174,7 +175,14 @@
     .room-pics Image {
         margin-right: 12;
     }
-
+    .h1, .h2 {
+        font-size: 24;
+        font-weight: bold;
+        color: white;
+        margin-top: 0;
+        margin-bottom: 0;
+        text-shadow: #3E3E3E 0px 1px 5px;
+    }
     .get-this-room Button {
         background-color: #F9F9F9;
         border-radius: 9;

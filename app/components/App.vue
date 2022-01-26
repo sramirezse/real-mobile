@@ -4,7 +4,8 @@
             <DrawerContent ref="fetchUser" />
         </StackLayout>
         <Frame ~mainContent ref="drawerMainContent">
-            <Home :fetchUser="fetchUser" />
+            <Search />
+            <!-- <Home :fetchUser="fetchUser" /> -->
         </Frame>
     </RadSideDrawer>
 </template>
@@ -12,6 +13,7 @@
 <script>
 import DrawerContent from "./DrawerContent";
 import Home from "./Home";
+import Search from "./Search";
 import { SlideInOnTopTransition } from "nativescript-ui-sidedrawer";
 import * as geolocation from "@nativescript/geolocation";
 import { Accuracy } from "@nativescript/core/ui/enums";
@@ -31,6 +33,7 @@ export default {
   components: {
     DrawerContent,
     Home,
+    Search
   },
   methods: {
     fetchUser() {

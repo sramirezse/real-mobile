@@ -1,9 +1,8 @@
 <template>
-  <Page actionBarHidden="true">
+  <Page actionBarHidden="true" style="background-image: url('~/assets/images/login_background.png'); background-size: cover;">
     <FlexboxLayout class="page">
       <StackLayout class="form">
-        <Image class="logo" src="~/assets/images/logo.png"></Image>
-        <Label class="header" text="Real State"></Label>
+        <Image class="logo" style="margin-bottom: 290" src="~/assets/images/logo.png"></Image>
 
         <GridLayout rows="auto, auto, auto">
           <StackLayout row="0" class="input-field">
@@ -26,7 +25,7 @@
               class="input"
               ref="password"
               :isEnabled="!processing"
-              hint="Password"
+              hint="Contraseña"
               secure="true"
               v-model="user.password"
               :returnKeyType="isLoggingIn ? 'done' : 'next'"
@@ -234,12 +233,12 @@ export default {
   margin-left: 30;
   margin-right: 30;
   flex-grow: 2;
-  vertical-align: middle;
+  margin-top:40;
 }
 
 .logo {
   margin-bottom: 12;
-  height: 140;
+  height: 100;
 }
 
 .header {
@@ -266,6 +265,9 @@ export default {
 
 .btn-primary {
   margin: 30 5 15 5;
+  color: aliceblue;
+  background-color: #eb58acff;
+  border-radius: 5;
 }
 
 .login-label {

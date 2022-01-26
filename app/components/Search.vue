@@ -5,7 +5,7 @@
         <GridLayout columns="50, *">
           <Label class="action-bar-title" text="Search" colSpan="2"/>
 
-          <Label class="fas" text.decode="&#xf0c9;" @tap="onDrawerButtonTap"/>
+          <Label class="fas" style="font-size: 30" text.decode="&#8672;" @tap="onDrawerButtonTap"/>
         </GridLayout>
       </ActionBar>
 
@@ -31,7 +31,8 @@
     },
     methods: {
       onDrawerButtonTap() {
-        utils.showDrawer();
+        // utils.showDrawer();
+        this.$routeBack();
       }
     }
   };
