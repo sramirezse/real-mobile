@@ -1,46 +1,38 @@
 <template>
-    <Page class="page" backgroundSpanUnderStatusBar="true">
-      <ActionBar class="action-bar">
-        <NavigationButton visibility="hidden"/>
-        <GridLayout columns="50, *">
-          <Label class="action-bar-title" text="Browse" colSpan="2"/>
+  <Page class="page" backgroundSpanUnderStatusBar="true" overfloSafeArea="true">
+    <Header></Header>
 
-          <Label class="fas" text.decode="&#xf0c9;" @tap="onDrawerButtonTap"/>
-        </GridLayout>
-      </ActionBar>
-
-        <GridLayout class="page__content">
-            <Label class="page__content-icon far" text.decode="&#xf1ea;"/>
-            <Label class="page__content-placeholder" :text="message"/>
-        </GridLayout>
-    </Page>
+    <GridLayout class="page__content">
+      <Label class="page__content-icon far" text.decode="&#xf1ea;" />
+      <Label class="page__content-placeholder" :text="message" />
+    </GridLayout>
+  </Page>
 </template>
 
 <script>
-  import * as utils from "~/shared/utils";
-  import { SelectedPageService } from "../shared/selected-page-service";
+import { SelectedPageService } from "../shared/selected-page-service";
+import Header from "./Common/Header";
 
-  export default {
-    mounted() {
-      SelectedPageService.getInstance().updateSelectedPage("Browse");
+export default {
+  mounted() {
+    SelectedPageService.getInstance().updateSelectedPage("Browse");
+  },
+  components: {
+    Header,
+  },
+  computed: {
+    message() {
+      return "<!-- Page content goes here -->";
     },
-    computed: {
-      message() {
-        return "<!-- Page content goes here -->";
-      }
-    },
-    methods: {
-      onDrawerButtonTap() {
-        utils.showDrawer();
-      }
-    }
-  };
+  },
+  methods: {},
+};
 </script>
 
 <style scoped lang="scss">
-    // Start custom common variables
-    @import '@nativescript/theme/scss/variables/blue';
-    // End custom common variables
+// Start custom common variables
+@import "@nativescript/theme/scss/variables/blue";
+// End custom common variables
 
-    // Custom styles
+// Custom styles
 </style>

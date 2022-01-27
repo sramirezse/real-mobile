@@ -2,41 +2,15 @@
   <!-- <Page class="page" actionBarHidden="true" backgroundSpanUnderStatusBar="true"> -->
   <Page
     class="page"
-    actionBarHidden="true"
+
     backgroundSpanUnderStatusBar="true"
     overfloSafeArea="true"
   >
+    <Header :burguerIcon="true" :backIcon="false"></Header>
     <GridLayout class="page__content">
       <DockLayout class="screen" stretchLastChild="true">
         <ScrollView dock="top">
           <StackLayout orientation="vertical">
-            <GridLayout class="header" rows="auto" columns="*,auto,auto">
-              <GridLayout columns="50, *">
-                <Label
-                  class="fas"
-                  style="font-size: 20; font-weight: bold"
-                  text.decode="&#xf0c9;"
-                  @tap="onDrawerButtonTap"
-                />
-              </GridLayout>
-              <Image
-                src="~/assets/images/search.png"
-                verticalAlignment="center"
-                marginRight="25"
-                row="0"
-                col="1"
-                height="22"
-                @tap="$routeTo('/search')"
-              />
-              <Image
-                src="~/assets/images/houses.png"
-                verticalAlignment="middle"
-                marginRight="10"
-                row="0"
-                col="2"
-                height="30"
-              />
-            </GridLayout>
             <GridLayout class="tabs" columns="*,*,*,*,*" height="30">
               <Label class="active" text="Destacadas" row="0" col="0"></Label>
               <Label text="En renta" row="0" col="1"></Label>
@@ -47,7 +21,6 @@
             <StackLayout class="content">
               <Label class="h1" text="Propiedades destacadas"></Label>
 
-              <Rent></Rent>
               <Rent></Rent>
             </StackLayout>
           </StackLayout>
@@ -64,8 +37,10 @@ import Rent from "./Home/Rent";
 import NumberFormat from "../mixins/numberFormat";
 import eventScroll from "../mixins/eventScroll";
 import propertyMixin from "../mixins/property";
+import Header from "./Common/Header";
+
 export default {
-  components: { Rent },
+  components: { Rent, Header },
   computed: {},
   mixins: [NumberFormat, eventScroll, propertyMixin],
   mounted() {

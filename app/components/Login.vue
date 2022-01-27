@@ -1,8 +1,9 @@
 <template>
-  <Page actionBarHidden="true" style="background-image: url('~/assets/images/login_background.png'); background-size: cover;">
+  <Page  style="background-image: url('~/assets/images/login_background.png'); background-size: cover;">
+  <Header backgroundColor="#eb57ad"></Header>
     <FlexboxLayout class="page">
       <StackLayout class="form">
-        <Image class="logo" style="margin-bottom: 290" src="~/assets/images/logo.png"></Image>
+        <Image class="logo" style="margin-bottom: 200" src="~/assets/images/logo.png"></Image>
 
         <GridLayout rows="auto, auto, auto">
           <StackLayout row="0" class="input-field">
@@ -77,7 +78,9 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import Header from './Common/Header.vue';
 export default {
+  components: { Header },
   data() {
     return {
       isLoggingIn: true,

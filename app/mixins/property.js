@@ -35,12 +35,12 @@ export default {
         if(count == total){
           this.page ++;
           console.log(this.page);
-          this.fetchProperties();
+          this.fetchPropertiesRent();
           console.log('99percent');
         }
       }
     },
-    async fetchProperties(){
+    async fetchPropertiesRent(){
       const data = await this.$store.dispatch('property/index', {
        params: {
          page: this.page,

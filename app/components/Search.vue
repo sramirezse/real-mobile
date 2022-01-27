@@ -1,13 +1,6 @@
 <template>
     <Page class="page">
-      <ActionBar class="action-bar">
-        <NavigationButton visibility="hidden"/>
-        <GridLayout columns="50, *">
-          <Label class="action-bar-title" text="Search" colSpan="2"/>
-
-          <Label class="fas" style="font-size: 30" text.decode="&#8672;" @tap="onDrawerButtonTap"/>
-        </GridLayout>
-      </ActionBar>
+      <Header :burguerIcon="false" :backIcon="true"></Header>
 
         <GridLayout class="page__content">
             <Label class="page__content-icon fas" text.decode="&#xf002;"/>
@@ -19,8 +12,11 @@
 <script>
   import * as utils from "~/shared/utils";
   import { SelectedPageService } from "../shared/selected-page-service";
-
+  import Header from "./Common/Header";
   export default {
+    components: {
+      Header
+    },
     mounted() {
       SelectedPageService.getInstance().updateSelectedPage("Search");
     },

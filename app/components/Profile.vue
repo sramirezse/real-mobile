@@ -1,41 +1,14 @@
 <template>
   <Page
     class="page"
-    actionBarHidden="true"
     backgroundSpanUnderStatusBar="true"
     overfloSafeArea="true"
   >
+            <Header></Header>
     <GridLayout class="page__content">
       <DockLayout class="screen" stretchLastChild="true">
         <ScrollView dock="top">
           <StackLayout orientation="vertical">
-            <GridLayout class="header" rows="auto" columns="*,auto,auto">
-              <GridLayout columns="50, *">
-                <Label
-                  class="fas"
-                  style="font-size: 20; font-weight: bold"
-                  text.decode="&#xf0c9;"
-                  @tap="onDrawerButtonTap"
-                />
-              </GridLayout>
-              <Image
-                src="~/assets/images/search.png"
-                verticalAlignment="center"
-                marginRight="25"
-                row="0"
-                col="1"
-                height="22"
-                @tap="$routeTo('/search')"
-              />
-              <Image
-                src="~/assets/images/houses.png"
-                verticalAlignment="middle"
-                marginRight="10"
-                row="0"
-                col="2"
-                height="30"
-              />
-            </GridLayout>
 
             <StackLayout class="content">
 
@@ -167,10 +140,14 @@
 <script>
 import * as utils from "~/shared/utils";
 import { SelectedPageService } from "../shared/selected-page-service";
+import Header from "./Common/Header";
 
 export default {
   mounted() {
     SelectedPageService.getInstance().updateSelectedPage("Profile");
+  },
+  components:{
+    Header
   },
   computed: {
     message() {
