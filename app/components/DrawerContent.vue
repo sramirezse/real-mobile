@@ -134,7 +134,7 @@ export default {
       await this.$store.dispatch("auth/logout").then((res) => {
         // console.log(res);
         this.user = null;
-        // this.$routeTo("/login");
+        this.$routeTo("/login");
       });
 
 

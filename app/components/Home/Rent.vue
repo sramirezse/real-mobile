@@ -28,7 +28,7 @@
           width="135"
           @tap="showDetails(item)"
           pageTransition="fade"
-          v-for="item in items"
+          v-for="item in rents"
           :key="item.id"
         >
           <Image
@@ -92,8 +92,25 @@ export default {
         },
       });
     },
+    horizontalPercentFunc(event){
+      const events = this.horizontalPercent(event);
+      // console.log('horizontalPercentFunc', events);
+
+      if(events.percent ==100){
+        const count = this.rents.length;
+        const total = this.$store.getters['property/totalLoadRent'];
+        console.log('total', total);
+        console.log('count', count);
+        if(count == total){
+          this.page ++;
+          console.log(this.page);
+          this.fetchPropertiesRent();
+          console.log('99percent');
+        }
+      }
+    },
   },
-  mounted() {
+  created() {
     this.fetchPropertiesRent();;
   },
 };

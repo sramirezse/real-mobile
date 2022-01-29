@@ -11,7 +11,12 @@
           text.decode="&#xf0c9;"
           @tap="onDrawerButtonTap"
         />
-          <Label v-show="backIcon" class="fas" style="font-size: 30" text.decode="&#8672;" @tap="onDrawerButtonBack"/>
+        <Label
+          v-show="backIcon"
+          text.decode="&#8672;"
+          style=" font-weight: bold"
+          @tap="onDrawerButtonBack"
+        />
       </GridLayout>
       <Image
         src="~/assets/images/search.png"
@@ -21,6 +26,7 @@
         col="1"
         height="22"
         @tap="$routeTo('/search')"
+        v-show="searchIcon"
       />
       <Image
         src="~/assets/images/houses.png"
@@ -29,8 +35,15 @@
         row="0"
         col="2"
         height="30"
+        v-show="housesIcon"
       />
-
+      <SearchBar
+        verticalAlignment="right"
+        @textChange="onSearch"
+        v-model="searchQuery"
+        v-show="searchBar"
+        width="85%"
+      />
     </GridLayout>
   </ActionBar>
 </template>
@@ -44,44 +57,65 @@ export default {
       utils.showDrawer();
     },
     onDrawerButtonBack() {
-        // utils.showDrawer();
-        this.$routeBack();
-      }
+      // utils.showDrawer();
+      this.$routeBack();
+    },
+    async onSearch() {
+      // console.log("22222");
+      let search = this.searchQuery;
+      let params = {
+        params: {
+          page: 1,
+          per_page: 50,
+          limit: 50,
+          offset: 0,
+          search: search,
+        },
+      };
+      await this.$store.dispatch("property/search", params);
+      // console.log("resp", resp);
+    },
   },
-  mounted(){
-    console.log('backgroundcolor',this.backgroundColor)
-    console.log('backIcon',this.backIcon)
-    console.log('burguerIcon',this.burguerIcon)
-    console.log('housesIcon',this.housesIcon)
-    console.log('searchIcon',this.searchIcon)
+  mounted() {
+    console.log("backgroundcolor", this.backgroundColor);
+    console.log("backIcon", this.backIcon);
+    console.log("burguerIcon", this.burguerIcon);
+    console.log("housesIcon", this.housesIcon);
+    console.log("searchIcon", this.searchIcon);
   },
   data() {
-    return {};
+    return {
+      searchQuery: "",
+    };
   },
-  props:{
+  props: {
     backgroundColor: {
       type: String,
-      default: "#ffffff"
+      default: "#ffffff",
     },
     color: {
       type: String,
-      default: "#000000"
+      default: "#000000",
     },
-    searchIcon:{
+    searchIcon: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    housesIcon:{
+    housesIcon: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    burguerIcon:{
+    burguerIcon: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    backIcon:{
+    backIcon: {
       type: Boolean,
-      default: false
+      default: false,
+    },
+    searchBar: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -90,8 +124,10 @@ export default {
     },
     headerStyle() {
       return {
-        "background-color": this.backgroundColor ? this.backgroundColor : "#ffffff",
-        "color": this.color ? this.color : "#000000",
+        "background-color": this.backgroundColor
+          ? this.backgroundColor
+          : "#ffffff",
+        color: this.color ? this.color : "#000000",
       };
     },
   },
@@ -99,7 +135,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-</style>>
-
 </style>
